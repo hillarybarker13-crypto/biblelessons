@@ -7,20 +7,17 @@ const verses = {
 };
 
 export default function App(){
+  const [name,setName]=useState("");
+  const [age,setAge]=useState(10);
+  const [step,setStep]=useState("name");
 
-  const [name,setName] = useState("");
-  const [age,setAge] = useState(10);
-  const [step,setStep] = useState("name");
+  const [streak,setStreak]=useState(1);
+  const [completed,setCompleted]=useState([]);
+  const [prayers,setPrayers]=useState([]);
+  const [input,setInput]=useState("");
 
-  const [streak,setStreak] = useState(1);
-  const [completed,setCompleted] = useState([]);
-
-  const [prayers,setPrayers] = useState([]);
-  const [input,setInput] = useState("");
-
-  const [openVerse,setOpenVerse] = useState(null);
-
-  const [showMood,setShowMood] = useState(false);
+  const [showMood,setShowMood]=useState(false);
+  const [openVerse,setOpenVerse]=useState(null);
 
   const kids = age <= 10;
 
@@ -28,13 +25,16 @@ export default function App(){
     ? {bg:"#B5D5C8",header:"#EBBEC6",verse:"#54B7AF",card:"#FFF7EF"}
     : {bg:"#EEDECD",header:"#A6B2B8",verse:"#80917B",card:"#FFFFFF"};
 
-  const card = (bg,color="inherit")=>({
-    background:bg,color,borderRadius:24,padding:24,
-    boxShadow:"0 8px 24px rgba(0,0,0,0.08)"
+  const card=(bg,color="inherit")=>({
+    background:bg,
+    color,
+    borderRadius:30,
+    padding:28,
+    boxShadow:"0 10px 30px rgba(0,0,0,0.1)"
   });
 
   useEffect(()=>{
-    const d = JSON.parse(localStorage.getItem("loved")||"{}");
+    const d=JSON.parse(localStorage.getItem("v2")||"{}");
     if(d.name){setName(d.name);setStep("app");}
     if(d.age)setAge(d.age);
     if(d.streak)setStreak(d.streak);
@@ -43,7 +43,7 @@ export default function App(){
   },[]);
 
   useEffect(()=>{
-    localStorage.setItem("loved",JSON.stringify({name,age,streak,completed,prayers}));
+    localStorage.setItem("v2",JSON.stringify({name,age,streak,completed,prayers}));
   },[name,age,streak,completed,prayers]);
 
   const completeDay=()=>{
@@ -60,8 +60,8 @@ export default function App(){
       id:Date.now(),
       text:input,
       done:false,
-      x:Math.random()*70,
-      y:Math.random()*70
+      x:Math.random()*65,
+      y:Math.random()*65
     }]);
     setInput("");
   };
@@ -72,9 +72,9 @@ export default function App(){
 
   if(step==="name"){
     return (
-      <div style={{padding:24}}>
+      <div style={{padding:30}}>
         <h2>Welcome 🤍</h2>
-        <input placeholder="Your name" value={name} onChange={e=>setName(e.target.value)}/>
+        <input value={name} onChange={e=>setName(e.target.value)} placeholder="Your name"/>
         <button onClick={()=>name && setStep("age")}>Continue</button>
       </div>
     );
@@ -82,7 +82,7 @@ export default function App(){
 
   if(step==="age"){
     return (
-      <div style={{padding:24}}>
+      <div style={{padding:30}}>
         <h2>Hello {name}, how old are you?</h2>
         <input type="range" min="2" max="100" value={age} onChange={e=>setAge(e.target.value)}/>
         <button onClick={()=>setStep("app")}>Start</button>
@@ -91,7 +91,7 @@ export default function App(){
   }
 
   return (
-    <div style={{minHeight:"100vh",background:palette.bg,padding:24}}>
+    <div style={{minHeight:"100vh",background:palette.bg,padding:30}}>
 
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:24}}>
         <div style={card(palette.header)}>
@@ -119,9 +119,9 @@ export default function App(){
         <button onClick={completeDay}>Mark Today Complete</button>
       </div>
 
-      <div style={{...card(palette.card),marginTop:24,position:"relative",height:400}}>
+      <div style={{...card(palette.card),marginTop:24,position:"relative",height:420}}>
         <h3>Prayer Board</h3>
-        <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Write a prayer..." />
+        <input value={input} onChange={e=>setInput(e.target.value)} placeholder="Write prayer"/>
         <button onClick={addPrayer}>Add</button>
 
         {prayers.map(p=>(
@@ -132,8 +132,9 @@ export default function App(){
               left:p.x+"%",
               top:p.y+"%",
               background:"#fff8b5",
-              padding:10,
-              borderRadius:6,
+              padding:12,
+              borderRadius:8,
+              transform:"rotate(-2deg)",
               textDecoration:p.done?"line-through":"none",
               cursor:"pointer"
             }}>
@@ -147,7 +148,7 @@ export default function App(){
           position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",
           display:"flex",alignItems:"center",justifyContent:"center"
         }}>
-          <div style={{background:"white",padding:20,borderRadius:20}}>
+          <div style={{background:"white",padding:24,borderRadius:24}}>
             <h3>{openVerse}</h3>
             <p>{verses[openVerse]}</p>
           </div>
@@ -159,7 +160,7 @@ export default function App(){
           position:"fixed",inset:0,background:"rgba(0,0,0,0.4)",
           display:"flex",alignItems:"center",justifyContent:"center"
         }}>
-          <div style={{background:"white",padding:20,borderRadius:20,textAlign:"center"}}>
+          <div style={{background:"white",padding:24,borderRadius:24,textAlign:"center"}}>
             <h3>How do you feel today?</h3>
             <div style={{fontSize:28}}>
               <span onClick={()=>setShowMood(false)} style={{margin:10,cursor:"pointer"}}>😄</span>
